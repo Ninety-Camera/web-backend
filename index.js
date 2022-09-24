@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const userController = require("./src/controllers/userController");
+const notificationController = require("./src/controllers/notificationController");
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api/user", userController);
+app.use("/api/notification", notificationController);
 
 app.listen(process.env.PORT, () => {
   console.log("Server started sucessfully!");
