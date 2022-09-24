@@ -2,9 +2,9 @@ const createOutput = require("../helpers/createOutput");
 const userRepository = require("../repositories/userRepository");
 const bcrypt = require("bcrypt");
 const { userRegisterSchema } = require("../validationSchemas/userSchema");
+const { generateAccessToken } = require("../helpers/accessToken");
 
 async function registerUser(data) {
-  // Validate the user
   try {
     await userRegisterSchema.validateAsync({ ...data });
   } catch (error) {
@@ -21,7 +21,12 @@ async function registerUser(data) {
           ...data,
           password: hash,
         });
-        resolve(createOutput(201, user));
+        resolve(
+          createOutput(201, {
+            user,
+            token: generateAccessToken({ id: user.id, email: user.email }),
+          })
+        );
       } catch (error) {
         resolve(createOutput(500, "Error in creating the user"));
       }
