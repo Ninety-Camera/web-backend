@@ -9,6 +9,7 @@ const io = require("socket.io")(http);
 
 const userController = require("./src/controllers/userController");
 const notificationController = require("./src/controllers/notificationController");
+const cctvController = require("./src/controllers/cctvController");
 
 app.use(cors({ origin: "*" }));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 
 app.use("/api/user", userController);
 app.use("/api/notification", notificationController);
+app.use("/api/cctv", cctvController);
 
 http.listen(process.env.PORT, () => {
   console.log("Server started sucessfully!");
