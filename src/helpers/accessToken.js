@@ -16,6 +16,7 @@ function authenticateToken(req, res, next) {
     if (err) {
       res.status(403);
       res.send(createOutput(403, "Unauthrorized"));
+      return;
     }
 
     req.user = user;
