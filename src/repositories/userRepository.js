@@ -14,7 +14,10 @@ async function registerUser(data) {
 
 async function getUser(email) {
   try {
-    const user = await prisma.user.findUnique({ where: { email: email } });
+    const user = await prisma.user.findUnique({
+      where: { email: email },
+      include: { CCTV_System: true },
+    });
     return user;
   } catch (error) {
     throw error;
