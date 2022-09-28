@@ -27,18 +27,24 @@ http.listen(process.env.PORT, () => {
   console.log("Server started sucessfully!");
 });
 
-app.get(
-  "/api/cctv/setsettings/:systemId/:status/:result",
-  authenticateToken,
-  async (req, res) => {
-    const systemId = req.params.systemId;
-    const status = req.params.status;
-    const socket = sockets.find((item) => item.systemId === systemId);
-    socket.socket.emit("intrusion-message", status);
+app.put("/api/cctv/settings/change", authenticateToken, async (req, res) => {
+  const data = { userId: req.user.id, ...req.body };
+
+  const result = await cctvService.changeCCTVSettings(data);
+  if (result.status === 201) {
+    const systemId = req.body.systemId;
+    const status = req.body.newStatus;
+    if (sockets.length > 0) {
+      const socket = sockets.find((item) => item.systemId === systemId);
+      socket.socket.emit("intrusion-message", status);
+    }
     res.status(200);
-    res.send(JSON.parse(req.params.result));
+    res.send(result);
+  } else {
+    res.status(200);
+    res.send(result);
   }
-);
+});
 
 io.use(async (socket, next) => {
   const id = socket.handshake.auth.systemId;
