@@ -27,6 +27,7 @@ async function logInUser(data) {
       });
     });
   } catch (error) {
+    console.log("Error occured: ", error);
     return createOutput(400, "Error in getting the user");
   }
 }
