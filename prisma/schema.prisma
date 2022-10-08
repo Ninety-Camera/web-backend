@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @unique @default(uuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  firstName     String         @db.VarChar(255)
+  lastName      String         @db.VarChar(255)
+  email         String         @unique @db.VarChar(255)
+  role          Role           @default(USER)
+  password      String         @db.VarChar(255)
+  CCTV_System   CCTV_System?
+  Mobile_Device Mobile_Device?
+}
+
+model CCTV_System {
+  id            String          @id @default(uuid())
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String          @unique
+  createdAt     DateTime        @default(now())
+  cameraCount   Int
+  status        System_Status   @default(STOP)
+  Mobile_Device Mobile_Device[]
+  Intrusion     Intrusion[]
+}
+
+model Mobile_Device {
+  id       String      @id
+  system   CCTV_System @relation(fields: [systemId], references: [id])
+  systemId String
+  user     User        @relation(fields: [ownerId], references: [id])
+  ownerId  String      @unique
+
+  @@unique([id, ownerId])
+}
+
+model Intrusion {
+  id              String            @id @default(uuid())
+  occuredAt       DateTime          @default(now())
+  system          CCTV_System       @relation(fields: [systemId], references: [id])
+  systemId        String
+  Intrusion_Image Intrusion_Image[]
+  Intrusion_Video Intrusion_Video?
+
+  @@index([systemId])
+}
+
+model Intrusion_Image {
+  instrusion  Intrusion @relation(fields: [intrusionId], references: [id])
+  intrusionId String
+  image       String    @unique
+
+  @@unique([intrusionId, image])
+  @@index([intrusionId])
+}
+
+model Intrusion_Video {
+  video       String    @unique
+  intrusion   Intrusion @relation(fields: [intrusionId], references: [id])
+  intrusionId String    @unique
+
+  @@unique([video, intrusionId])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum System_Status {
+  RUNNING
+  STOP
+}
