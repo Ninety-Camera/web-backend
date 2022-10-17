@@ -5,6 +5,9 @@ const { userRegisterSchema } = require("../validationSchemas/userSchema");
 const { generateAccessToken } = require("../helpers/accessToken");
 
 async function logInUser(data) {
+  if (!data) {
+    return createOutput(400, "Invalid request");
+  }
   try {
     const user = await userRepository.getUser(data.email);
     if (!user) {
@@ -27,6 +30,7 @@ async function logInUser(data) {
       });
     });
   } catch (error) {
+    console.log("Error occured: ", error);
     return createOutput(400, "Error in getting the user");
   }
 }
