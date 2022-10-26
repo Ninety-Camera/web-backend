@@ -1,12 +1,20 @@
 const bcrypt = require("bcrypt");
 const createOutput = require("../helpers/createOutput");
 const userRepository = require("../repositories/userRepository");
-const { userRegisterSchema } = require("../validationSchemas/userSchema");
+const {
+  userRegisterSchema,
+  userSignInSchema,
+} = require("../validationSchemas/userSchema");
 const { generateAccessToken } = require("../helpers/accessToken");
 
 async function logInUser(data) {
   if (!data) {
     return createOutput(400, "Invalid request");
+  }
+  try {
+    await userSignInSchema.validateAsync({ ...data });
+  } catch (error) {
+    return createOutput(401, "Validation error!");
   }
   try {
     const user = await userRepository.getUser(data.email);
