@@ -17,13 +17,13 @@ router.post("/add", authenticateToken, async (req, res) => {
   res.send(response);
 });
 
-router.post("/image", async (req, res) => {
+router.post("/image", authenticateToken, async (req, res) => {
   const response = await intrusionService.addIntrusionImage(req.body);
   res.status(200);
   res.send(response);
 });
 
-router.post("/video", async (req, res) => {
+router.post("/video", authenticateToken, async (req, res) => {
   const response = await intrusionService.addIntrusionVideo(req.body);
   res.status(201);
   res.send(response);
