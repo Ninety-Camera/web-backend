@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const userController = require("./src/controllers/userController");
-const notificationController = require("./src/controllers/notificationController");
 const cctvController = require("./src/controllers/cctvController");
 const intrusionController = require("./src/controllers/intrusionController");
 
@@ -14,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api/user", userController);
-app.use("/api/notification", notificationController);
 app.use("/api/cctv", cctvController);
 app.use("/api/intrusion", intrusionController);
 
