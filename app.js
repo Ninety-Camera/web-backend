@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const expressWinston = require("express-winston");
+const winston = require("winston");
 
 const userController = require("./src/controllers/userController");
 const cctvController = require("./src/controllers/cctvController");
@@ -11,6 +13,26 @@ const intrusionController = require("./src/controllers/intrusionController");
 app.use(cors({ origin: "*" }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(
+  expressWinston.logger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+    ),
+  })
+);
+
+app.use(
+  expressWinston.errorLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+    ),
+  })
+);
 
 app.use("/api/user", userController);
 app.use("/api/cctv", cctvController);
