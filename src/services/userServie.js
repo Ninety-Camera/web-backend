@@ -73,7 +73,20 @@ async function registerUser(data) {
   });
 }
 
+async function registerUserForSystem(data) {
+  if (!data?.systemId && !data?.userId) {
+    return createOutput(400, "Invalid data");
+  }
+  try {
+    const result = await userRepository.subscriberUserForASystem(data);
+    return createOutput(201, result);
+  } catch (error) {
+    return createOutput(500, "Error in subscribing the user");
+  }
+}
+
 module.exports = {
   registerUser,
   logInUser,
+  registerUserForSystem,
 };

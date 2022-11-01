@@ -24,4 +24,13 @@ async function getUser(email) {
   }
 }
 
-module.exports = { registerUser, getUser };
+async function subscriberUserForASystem(data) {
+  try {
+    const subscribeData = await prisma.subscribers.create({ data: data });
+    return subscribeData;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { registerUser, getUser, subscriberUserForASystem };
