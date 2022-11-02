@@ -6,6 +6,9 @@ const {
   userSignInSchema,
 } = require("../validationSchemas/userSchema");
 const { generateAccessToken } = require("../helpers/accessToken");
+const {
+  mobileDeviceValidationSchema,
+} = require("../validationSchemas/mobileDeviceValidationSchema");
 
 async function logInUser(data) {
   if (!data) {
@@ -73,20 +76,22 @@ async function registerUser(data) {
   });
 }
 
-async function registerUserForSystem(data) {
-  if (!data?.systemId && !data?.userId) {
-    return createOutput(400, "Invalid data");
+async function registerMobileDevice(data) {
+  try {
+    await mobileDeviceValidationSchema.validateAsync({ ...data });
+  } catch (error) {
+    return createOutput(401, "Invalid data");
   }
   try {
-    const result = await userRepository.subscriberUserForASystem(data);
-    return createOutput(201, result);
+    const mobileDevice = await userRepository.registerMobileDevice(data);
+    return createOutput(201, mobileDevice);
   } catch (error) {
-    return createOutput(500, "Error in subscribing the user");
+    return createOutput(500, "Error in adding the mobile device");
   }
 }
 
 module.exports = {
   registerUser,
   logInUser,
-  registerUserForSystem,
+  registerMobileDevice,
 };

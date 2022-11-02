@@ -21,7 +21,6 @@ model User {
   password      String         @db.VarChar(255)
   CCTV_System   CCTV_System?
   Mobile_Device Mobile_Device?
-  Subscribers   Subscribers?
 }
 
 model CCTV_System {
@@ -33,15 +32,6 @@ model CCTV_System {
   status        System_Status   @default(STOP)
   Mobile_Device Mobile_Device[]
   Intrusion     Intrusion[]
-  Subscribers   Subscribers[]
-}
-
-model Subscribers {
-  user          User            @relation(fields: [userId], references: [id])
-  userId        String          @unique
-  CCTV_System   CCTV_System     @relation(fields: [systemId],references: [id])
-  systemId      String          
-  @@unique([userId,systemId])
 }
 
 model Mobile_Device {
