@@ -4,10 +4,12 @@
 name: Build and deploy Node.js app to Azure Web App - ninetycamera
 
 on:
-  push:
+  workflow_run:
+    workflows: [Test]
+    types:
+      - completed
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   build:
