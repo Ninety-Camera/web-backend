@@ -24,4 +24,13 @@ async function getUser(email) {
   }
 }
 
-module.exports = { registerUser, getUser };
+async function registerMobileDevice(data) {
+  try {
+    const mobileDevice = await prisma.mobile_Device.create({ data: data });
+    return mobileDevice;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { registerUser, getUser, registerMobileDevice };

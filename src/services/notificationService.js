@@ -1,19 +1,29 @@
 const { Expo } = require("expo-server-sdk");
 const createOutput = require("../helpers/createOutput");
 
-async function sendNotification(deviceId, data) {
+const deviceRepository = require("../repositories/deviceRepository");
+
+async function sendNotification(data) {
+  if (!data?.systemId) return createOutput(400, "Invalid data");
   let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
-  if (!Expo.isExpoPushToken(deviceId)) {
-    return createOutput(400, "Invalid device id");
-  }
-  const messages = [
-    {
-      to: deviceId,
+  const devices = await deviceRepository.getMobileDevices(data.systemId);
+  const deviceIds = devices.map((item) => item.id);
+
+  deviceIds.forEach((element) => {
+    if (!Expo.isExpoPushToken(element)) {
+      return createOutput(400, "Invalid device id");
+    }
+  });
+
+  const messages = deviceIds.map((item) => {
+    return {
+      to: item,
       sound: "default",
-      body: "This is a test notification",
+      body: "Intrusion detected",
       data: { withSome: "data" },
-    },
-  ];
+    };
+  });
+
   let chunks = expo.chunkPushNotifications(messages);
 
   return new Promise(async (resolve, reject) => {

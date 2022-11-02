@@ -1,10 +1,24 @@
 const bcrypt = require("bcrypt");
 const createOutput = require("../helpers/createOutput");
 const userRepository = require("../repositories/userRepository");
-const { userRegisterSchema } = require("../validationSchemas/userSchema");
+const {
+  userRegisterSchema,
+  userSignInSchema,
+} = require("../validationSchemas/userSchema");
 const { generateAccessToken } = require("../helpers/accessToken");
+const {
+  mobileDeviceValidationSchema,
+} = require("../validationSchemas/mobileDeviceValidationSchema");
 
 async function logInUser(data) {
+  if (!data) {
+    return createOutput(400, "Invalid request");
+  }
+  try {
+    await userSignInSchema.validateAsync({ ...data });
+  } catch (error) {
+    return createOutput(401, "Validation error!");
+  }
   try {
     const user = await userRepository.getUser(data.email);
     if (!user) {
@@ -62,7 +76,22 @@ async function registerUser(data) {
   });
 }
 
+async function registerMobileDevice(data) {
+  try {
+    await mobileDeviceValidationSchema.validateAsync({ ...data });
+  } catch (error) {
+    return createOutput(401, "Invalid data");
+  }
+  try {
+    const mobileDevice = await userRepository.registerMobileDevice(data);
+    return createOutput(201, mobileDevice);
+  } catch (error) {
+    return createOutput(500, "Error in adding the mobile device");
+  }
+}
+
 module.exports = {
   registerUser,
   logInUser,
+  registerMobileDevice,
 };

@@ -75,6 +75,7 @@ model Intrusion_Video {
 enum Role {
   ADMIN
   USER
+  OWNER
 }
 
 enum System_Status {
