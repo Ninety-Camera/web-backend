@@ -24,13 +24,13 @@ async function getUser(email) {
   }
 }
 
-async function subscriberUserForASystem(data) {
+async function registerMobileDevice(data) {
   try {
-    const subscribeData = await prisma.subscribers.create({ data: data });
-    return subscribeData;
+    const mobileDevice = await prisma.mobile_Device.create({ data: data });
+    return mobileDevice;
   } catch (error) {
     throw error;
   }
 }
 
-module.exports = { registerUser, getUser, subscriberUserForASystem };
+module.exports = { registerUser, getUser, registerMobileDevice };

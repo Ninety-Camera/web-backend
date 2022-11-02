@@ -1,4 +1,4 @@
-const userService = require("../../src/services/userServie");
+const userService = require("../../src/services/userService");
 const uuid = require("uuid");
 
 describe("User integration tests", () => {
@@ -12,7 +12,7 @@ describe("User integration tests", () => {
     };
     const response = await userService.registerUser(data);
     expect(response.status).toBe(201);
-  });
+  }, 10000);
 
   // Check whether what happen when sending an null object
   // to user register function
@@ -153,7 +153,7 @@ describe("User integration tests", () => {
       email: "",
       password: data.password,
     });
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
   });
 
   // Check what happen when sending a empty values when logining request body
@@ -169,7 +169,7 @@ describe("User integration tests", () => {
       email: data.email,
       password: "",
     });
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
   });
 
   // Check what happen when sending a invalid email when logining request body
@@ -185,7 +185,7 @@ describe("User integration tests", () => {
       email: "invalidemail",
       password: data.password,
     });
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
   });
 
   // Check user login returns the token

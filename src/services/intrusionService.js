@@ -1,5 +1,6 @@
 const createOutput = require("../helpers/createOutput");
 const intrusionRepository = require("../repositories/intrusionRepository");
+const notificationService = require("./notificationService");
 const {
   intrusionValidationSchema,
   intrusionImageValidationSchema,
@@ -14,7 +15,13 @@ async function addIntrusion(data) {
   }
   try {
     const response = await intrusionRepository.addIntrusion(data);
-    return createOutput(201, { intrusion: response });
+    const notificationResult = await notificationService.sendNotification({
+      systemId: data.systemId,
+    });
+    return createOutput(201, {
+      intrusion: response,
+      notification: notificationResult,
+    });
   } catch (error) {
     return createOutput(500, "Error in adding the instrusion");
   }
