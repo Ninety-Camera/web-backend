@@ -6,12 +6,10 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
 const sockets = require("./sockets");
-const { sendEmail } = require("./src/helpers/mailService");
 
 const cctvService = require("./src/services/cctvService");
 
 http.listen(process.env.PORT, () => {
-  sendEmail(null);
   console.log("Server started sucessfully!");
 });
 
