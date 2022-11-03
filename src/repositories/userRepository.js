@@ -8,6 +8,7 @@ async function registerUser(data) {
     delete user["password"];
     return user;
   } catch (error) {
+    console.log("Error occured: ", error);
     throw error;
   }
 }
@@ -20,6 +21,7 @@ async function getUser(email) {
     });
     return user;
   } catch (error) {
+    console.log("Error occured: ", error);
     throw error;
   }
 }
@@ -29,6 +31,7 @@ async function registerMobileDevice(data) {
     const mobileDevice = await prisma.mobile_Device.create({ data: data });
     return mobileDevice;
   } catch (error) {
+    console.log("Error occured: ", error);
     throw error;
   }
 }
