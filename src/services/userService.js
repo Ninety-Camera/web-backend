@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const createOutput = require("../helpers/createOutput");
 const userRepository = require("../repositories/userRepository");
+const cctvRepository = require("../repositories/cctvRepository");
 const {
   userRegisterSchema,
   userSignInSchema,
@@ -83,8 +84,9 @@ async function registerMobileDevice(data) {
     return createOutput(401, "Invalid data");
   }
   try {
-    const mobileDevice = await userRepository.registerMobileDevice(data);
-    return createOutput(201, mobileDevice);
+    await userRepository.registerMobileDevice(data);
+    const cctv = await cctvRepository.getCCTVSystem(data.systemId);
+    return createOutput(201, { system: cctv });
   } catch (error) {
     return createOutput(500, "Error in adding the mobile device");
   }
