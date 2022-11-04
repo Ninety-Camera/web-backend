@@ -5,6 +5,11 @@ const router = express.Router();
 
 const userService = require("../services/userService");
 
+router.get("/", authenticateToken, (req, res) => {
+  res.status(200);
+  res.send("Check");
+});
+
 router.post("/login", async (req, res) => {
   const result = await userService.logInUser(req.body);
   res.status(200);
