@@ -1,12 +1,25 @@
 const createOutput = require("../helpers/createOutput");
 const cctvRepository = require("../repositories/cctvRepository");
 
+async function validateSystem(systemId) {
+  try {
+    const system = await cctvRepository.getCCTVSystem(systemId);
+    if (system) {
+      return createOutput(200, "CCTV system exits");
+    } else {
+      return createOutput(400, "CCTV system not exists");
+    }
+  } catch (error) {
+    return createOutput(500, "Error occured ");
+  }
+}
+
 async function getCCTVSystem(systemId) {
   try {
     const system = await cctvRepository.getCCTVSystem(systemId);
-    return system;
+    return createOutput(200, system);
   } catch (error) {
-    throw error;
+    return createOutput(500, "Error occured");
   }
 }
 
@@ -33,4 +46,9 @@ async function changeCCTVSettings(data) {
   }
 }
 
-module.exports = { addCCTVSystem, changeCCTVSettings, getCCTVSystem };
+module.exports = {
+  addCCTVSystem,
+  changeCCTVSettings,
+  getCCTVSystem,
+  validateSystem,
+};

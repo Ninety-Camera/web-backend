@@ -12,6 +12,12 @@ router.post("/add", authenticateToken, async (req, res) => {
   res.send(result);
 });
 
+router.get("/validate/:systemId", authenticateToken, async (req, res) => {
+  const result = await cctvService.validateSystem(req.params.systemId);
+  res.status(200);
+  res.send(result);
+});
+
 router.put("/settings/change", authenticateToken, async (req, res) => {
   const data = { userId: req.user.id, ...req.body };
   const result = await cctvService.changeCCTVSettings(data);
