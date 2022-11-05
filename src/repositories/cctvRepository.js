@@ -15,7 +15,23 @@ async function getCCTVSystem(systemId) {
 
 async function addCCTVSystem(data) {
   try {
-    const system = await prisma.cCTV_System.create({ data: { ...data } });
+    const userUpdate = prisma.user.update({
+      where: { id: data.userId },
+      data: { role: "OWNER" },
+    });
+    const createSystem = prisma.cCTV_System.create({
+      data: {
+        cameraCount: data.cameraCount,
+        UserSystem: {
+          create: { userId: data.userId },
+        },
+        ownerId: data.userId,
+      },
+    });
+    const [system, user] = await prisma.$transaction([
+      createSystem,
+      userUpdate,
+    ]);
     return system;
   } catch (error) {
     throw error;
