@@ -18,6 +18,12 @@ async function getUser(email) {
       where: { email: email },
       include: { UserSystem: true, CCTV_System: true },
     });
+    if (user.UserSystem) {
+      const system = await prisma.cCTV_System.findUnique({
+        where: { id: user.UserSystem.systemId },
+      });
+      return { ...user, system: system };
+    }
     return user;
   } catch (error) {
     throw error;

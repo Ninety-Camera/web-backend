@@ -22,9 +22,6 @@ async function addCCTVSystem(data) {
     const createSystem = prisma.cCTV_System.create({
       data: {
         cameraCount: data.cameraCount,
-        UserSystem: {
-          create: { userId: data.userId },
-        },
         ownerId: data.userId,
       },
     });
