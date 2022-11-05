@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native","debian-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -20,19 +20,28 @@ model User {
   email         String         @unique @db.VarChar(255)
   role          Role           @default(USER)
   password      String         @db.VarChar(255)
-  CCTV_System   CCTV_System?
   Mobile_Device Mobile_Device?
+  UserSystem    UserSystem?
+  CCTV_System   CCTV_System?
+}
+
+model UserSystem {
+  userId      String      @unique
+  user        User        @relation(fields: [userId], references: [id])
+  systemId    String      @unique
+  CCTV_System CCTV_System @relation(fields: [systemId], references: [id])
 }
 
 model CCTV_System {
   id            String          @id @default(uuid())
-  user          User            @relation(fields: [userId], references: [id])
-  userId        String          @unique
+  ownerId       String          @unique
   createdAt     DateTime        @default(now())
   cameraCount   Int
   status        System_Status   @default(STOP)
   Mobile_Device Mobile_Device[]
   Intrusion     Intrusion[]
+  UserSystem    UserSystem?
+  user          User            @relation(fields: [ownerId], references: [id])
 }
 
 model Mobile_Device {

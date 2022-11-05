@@ -8,7 +8,6 @@ async function registerUser(data) {
     delete user["password"];
     return user;
   } catch (error) {
-    console.log("Error occured: ", error);
     throw error;
   }
 }
@@ -17,11 +16,10 @@ async function getUser(email) {
   try {
     const user = await prisma.user.findUnique({
       where: { email: email },
-      include: { CCTV_System: true },
+      include: { UserSystem: true, CCTV_System: true },
     });
     return user;
   } catch (error) {
-    console.log("Error occured: ", error);
     throw error;
   }
 }
@@ -31,7 +29,6 @@ async function registerMobileDevice(data) {
     const mobileDevice = await prisma.mobile_Device.create({ data: data });
     return mobileDevice;
   } catch (error) {
-    console.log("Error occured: ", error);
     throw error;
   }
 }

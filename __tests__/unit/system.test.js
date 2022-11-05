@@ -15,6 +15,6 @@ describe("System unit tests", () => {
       userId: response.id,
       cameraCount: 10,
     });
-    expect(system.userId).toBe(response.id);
+    expect(system.ownerId).toBe(response.id);
   }, 100000);
 });
