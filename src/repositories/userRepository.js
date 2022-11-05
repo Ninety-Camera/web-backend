@@ -26,8 +26,15 @@ async function getUser(email) {
 
 async function registerMobileDevice(data) {
   try {
-    const mobileDevice = await prisma.mobile_Device.create({ data: data });
-    return mobileDevice;
+    const mobileDevice = prisma.mobile_Device.create({ data: data });
+    const addUserRelationship = prisma.userSystem.create({
+      data: { systemId: data.systemId, userId: data.ownerId },
+    });
+    const [mobileResult, userSubscriptionResult] = await prisma.$transaction([
+      mobileDevice,
+      addUserRelationship,
+    ]);
+    return mobileResult;
   } catch (error) {
     throw error;
   }
