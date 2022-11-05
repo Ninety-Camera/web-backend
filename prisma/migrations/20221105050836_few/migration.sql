@@ -1,0 +1,2 @@
+-- AddForeignKey
+ALTER TABLE "CCTV_System" ADD CONSTRAINT "CCTV_System_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
