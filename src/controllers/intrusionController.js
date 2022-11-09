@@ -12,6 +12,12 @@ router.get("/get/:systemId", authenticateToken, async (req, res) => {
   res.send(response);
 });
 
+router.get("/images/:id", authenticateToken, async (req, res) => {
+  const response = await intrusionService.getIntrusionImages(req.params.id);
+  res.status(200);
+  res.send(response);
+});
+
 router.post("/add", authenticateToken, async (req, res) => {
   const response = await intrusionService.addIntrusion(req.body);
   await notificationService.sendNotification(req.body);

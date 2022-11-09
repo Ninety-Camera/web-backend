@@ -22,7 +22,7 @@ async function getUser(email) {
       const system = await prisma.cCTV_System.findUnique({
         where: { id: user.UserSystem.systemId },
       });
-      return { ...user, system: system };
+      return { ...user, CCTV_System: system };
     }
     return user;
   } catch (error) {

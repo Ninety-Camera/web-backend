@@ -41,9 +41,21 @@ async function addIntrusionVideo(data) {
   }
 }
 
+async function getIntrusionImages(intrusionId) {
+  try {
+    const response = await prisma.intrusion_Image.findMany({
+      where: { intrusionId: intrusionId },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   addIntrusion,
   getIntrusions,
   addIntrusionImage,
   addIntrusionVideo,
+  getIntrusionImages,
 };
