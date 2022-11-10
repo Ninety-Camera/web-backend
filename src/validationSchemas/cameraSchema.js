@@ -9,6 +9,7 @@ const cameraValidationSchema = Joi.object({
 
 const cameraDetailsUpdateSchema = Joi.object({
   id: Joi.string().required(),
+  systemId: Joi.string().required(),
   status: Joi.string().required(),
 });
 
