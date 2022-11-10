@@ -37,7 +37,8 @@ async function updateCameraStatus(data) {
     return createOutput(400, "Validation Error");
   }
   try {
-    const camera = await cctvRepository.changeCameraStatus(data);
+    const cameraUpdate = { id: data.id, status: data.status };
+    const camera = await cctvRepository.changeCameraStatus(cameraUpdate);
     return createOutput(200, { camera: camera });
   } catch (error) {
     return createOutput(500, "Error in updating the camera");
