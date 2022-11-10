@@ -2,6 +2,18 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
+async function updateUserPassword(data) {
+  try {
+    const user = await prisma.user.update({
+      data: { password: data.password },
+      where: { id: data.userId },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function registerUser(data) {
   try {
     const user = await prisma.user.create({ data: { ...data } });
@@ -46,4 +58,9 @@ async function registerMobileDevice(data) {
   }
 }
 
-module.exports = { registerUser, getUser, registerMobileDevice };
+module.exports = {
+  registerUser,
+  getUser,
+  registerMobileDevice,
+  updateUserPassword,
+};

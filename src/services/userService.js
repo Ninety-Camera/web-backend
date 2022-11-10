@@ -5,11 +5,37 @@ const cctvRepository = require("../repositories/cctvRepository");
 const {
   userRegisterSchema,
   userSignInSchema,
+  userPasswordResetSchema,
 } = require("../validationSchemas/userSchema");
 const { generateAccessToken } = require("../helpers/accessToken");
 const {
   mobileDeviceValidationSchema,
 } = require("../validationSchemas/mobileDeviceValidationSchema");
+
+async function resetPassword(data) {
+  try {
+    await userPasswordResetSchema.validateAsync(data);
+  } catch (error) {
+    return createOutput(401, "Validation error");
+  }
+  return new Promise(async (resolve, reject) => {
+    bcrypt.hash(data.password, 10, async function (err, hash) {
+      // Store hash in your password DB.
+      if (err) {
+        resolve(createOutput(400, "Server error"));
+      }
+      try {
+        const user = await userRepository.updateUserPassword({
+          userId: data.userId,
+          password: hash,
+        });
+        resolve(createOutput(201, "Password changed succesfully"));
+      } catch (error) {
+        resolve(createOutput(500, "Error in creating the user"));
+      }
+    });
+  });
+}
 
 async function logInUser(data) {
   if (!data) {
@@ -96,4 +122,6 @@ module.exports = {
   registerUser,
   logInUser,
   registerMobileDevice,
+  resetPassword,
+  resetPassword,
 };
