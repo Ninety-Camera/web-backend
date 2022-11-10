@@ -28,12 +28,9 @@ router.put("/settings/change", authenticateToken, async (req, res) => {
       const socket = sockets.find((item) => item.systemId === systemId);
       socket.socket.emit("intrusion-message", status);
     }
-    res.status(200);
-    res.send(result);
-  } else {
-    res.status(200);
-    res.send(result);
   }
+  res.status(200);
+  res.send(result);
 });
 
 module.exports = router;
