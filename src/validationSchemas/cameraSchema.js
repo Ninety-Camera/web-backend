@@ -7,6 +7,12 @@ const cameraValidationSchema = Joi.object({
   type: Joi.string().required(),
 });
 
+const cameraDetailsUpdateSchema = Joi.object({
+  id: Joi.string().required(),
+  status: Joi.string().required(),
+});
+
 module.exports = {
   cameraValidationSchema,
+  cameraDetailsUpdateSchema,
 };
