@@ -28,20 +28,40 @@ model User {
 model UserSystem {
   userId      String      @unique
   user        User        @relation(fields: [userId], references: [id])
-  systemId    String      
+  systemId    String
   CCTV_System CCTV_System @relation(fields: [systemId], references: [id])
 }
 
 model CCTV_System {
-  id            String          @id @default(uuid())
-  ownerId       String          @unique
-  createdAt     DateTime        @default(now())
+  id            String           @id @default(uuid())
+  ownerId       String           @unique
+  createdAt     DateTime         @default(now())
   cameraCount   Int
-  status        System_Status   @default(STOP)
+  status        System_Status    @default(STOP)
   Mobile_Device Mobile_Device[]
   Intrusion     Intrusion[]
   UserSystem    UserSystem[]
-  user          User            @relation(fields: [ownerId], references: [id])
+  user          User             @relation(fields: [ownerId], references: [id])
+  cameras       Camera_Details[]
+}
+
+model Camera_Details {
+  id          String        @id @default(uuid())
+  systemId    String
+  CCTV_System CCTV_System   @relation(fields: [systemId], references: [id])
+  name        String
+  type        CAMERA_TYPE
+  status      CAMERA_STATUS
+}
+
+enum CAMERA_STATUS {
+  RUNNING
+  STOP
+}
+
+enum CAMERA_TYPE {
+  IP_CAMERA
+  WEB_CAMERA
 }
 
 model Mobile_Device {
