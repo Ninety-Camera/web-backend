@@ -23,9 +23,9 @@ async function getIntrusions(systemId) {
   }
 }
 
-async function addIntrusionImage(data) {
+async function addIntrusionImages(data) {
   try {
-    const response = await prisma.intrusion_Image.create({ data: data });
+    const response = await prisma.intrusion_Image.createMany({ data: data });
     return response;
   } catch (error) {
     throw error;
@@ -55,7 +55,7 @@ async function getIntrusionImages(intrusionId) {
 module.exports = {
   addIntrusion,
   getIntrusions,
-  addIntrusionImage,
+  addIntrusionImages,
   addIntrusionVideo,
   getIntrusionImages,
 };
