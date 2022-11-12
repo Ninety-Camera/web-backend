@@ -34,6 +34,18 @@ async function changeCameraStatus(data) {
   }
 }
 
+async function updateManyCameras(systemId, newStatus) {
+  try {
+    const result = await prisma.camera_Details.updateMany({
+      where: { systemId },
+      data: { status: newStatus },
+    });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function deleteCamera(cameraId) {
   try {
     const result = await prisma.camera_Details.delete({
@@ -45,4 +57,10 @@ async function deleteCamera(cameraId) {
   }
 }
 
-module.exports = { addCamera, getCameras, changeCameraStatus, deleteCamera };
+module.exports = {
+  addCamera,
+  getCameras,
+  changeCameraStatus,
+  deleteCamera,
+  updateManyCameras,
+};

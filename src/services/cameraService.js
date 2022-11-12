@@ -30,6 +30,15 @@ async function getCameras(systemId) {
   }
 }
 
+async function updateManyCameraStatus(systemId, newStatus) {
+  try {
+    const result = await cctvRepository.updateManyCameras(systemId, newStatus);
+    return createOutput(200, { cameras: result });
+  } catch (error) {
+    return createOutput(500, "Error in updating the details");
+  }
+}
+
 async function updateCameraStatus(data) {
   try {
     await cameraDetailsUpdateSchema.validateAsync(data);
@@ -54,4 +63,10 @@ async function deleteCamera(cameraId) {
   }
 }
 
-module.exports = { addCamera, getCameras, updateCameraStatus, deleteCamera };
+module.exports = {
+  addCamera,
+  getCameras,
+  updateCameraStatus,
+  deleteCamera,
+  updateManyCameraStatus,
+};
