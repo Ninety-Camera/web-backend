@@ -78,10 +78,20 @@ async function getIntrusionImages(systemId) {
   }
 }
 
+async function getLatestIntrusion(systemId) {
+  try {
+    const response = await intrusionRepository.getLatestIntrusion(systemId);
+    return createOutput(200, { intrusion: response });
+  } catch (error) {
+    return createOutput(500, "Error occured in getting the intrusion");
+  }
+}
+
 module.exports = {
   addIntrusion,
   getIntrusions,
   addIntrusionImages,
   addIntrusionVideo,
   getIntrusionImages,
+  getLatestIntrusion,
 };
