@@ -22,7 +22,7 @@ router.put("/update", authenticateToken, async (req, res) => {
     const systemId = req.body.systemId;
     if (sockets.length > 0) {
       const socket = sockets.find((item) => item.systemId === systemId);
-      socket.socket.emit("intrusion-message-camera", result.camera);
+      socket.socket.emit("intrusion-message-camera", result?.data?.camera);
     }
   }
   res.status(200);
