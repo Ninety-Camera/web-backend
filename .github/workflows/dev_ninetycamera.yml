@@ -18,11 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v1
-        with:
-          node-version: "16.x"
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
@@ -42,7 +37,12 @@ jobs:
         with:
           name: node-app
 
-       - name: npm install, build, and test
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - name: npm install, build, and test
         run: |
           npm install
           npx prisma generate
