@@ -6,7 +6,7 @@ const intrusionValidationSchema = Joi.object({
 
 const intrusionImageValidationSchema = Joi.object({
   intrusionId: Joi.string().required(),
-  image: Joi.string().required(),
+  images: Joi.array().required(),
 });
 
 const intrusionVideoValidationSchema = Joi.object({

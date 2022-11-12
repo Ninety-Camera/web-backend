@@ -27,15 +27,19 @@ async function addIntrusion(data) {
   }
 }
 
-async function addIntrusionImage(data) {
+async function addIntrusionImages(data) {
   try {
     await intrusionImageValidationSchema.validateAsync({ ...data });
   } catch (error) {
     return createOutput(401, "Validation error");
   }
   try {
-    const response = await intrusionRepository.addIntrusionImage(data);
-    return createOutput(201, { image: response });
+    const imageData = [];
+    data.images.forEach((element) => {
+      imageData.push({ intrusionId: data.intrusionId, image: element });
+    });
+    const response = await intrusionRepository.addIntrusionImages(imageData);
+    return createOutput(201, { images: data.images, result: response });
   } catch (error) {
     return createOutput(500, "Error in adding the intrusion Image");
   }
@@ -77,7 +81,7 @@ async function getIntrusionImages(systemId) {
 module.exports = {
   addIntrusion,
   getIntrusions,
-  addIntrusionImage,
+  addIntrusionImages,
   addIntrusionVideo,
   getIntrusionImages,
 };

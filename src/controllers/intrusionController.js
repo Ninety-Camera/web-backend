@@ -26,7 +26,7 @@ router.post("/add", authenticateToken, async (req, res) => {
 });
 
 router.post("/image", authenticateToken, async (req, res) => {
-  const response = await intrusionService.addIntrusionImage(req.body);
+  const response = await intrusionService.addIntrusionImages(req.body);
   res.status(200);
   res.send(response);
 });
