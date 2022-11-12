@@ -15,9 +15,30 @@ async function getIntrusions(systemId) {
   try {
     const intrusions = await prisma.intrusion.findMany({
       where: { systemId: systemId },
-      include: { Intrusion_Image: true },
+      include: { Intrusion_Image: true, Intrusion_Video: true },
     });
     return intrusions;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getLatestIntrusion(systemId) {
+  try {
+    const intrusion = await prisma.intrusion.findMany({
+      orderBy: {
+        occuredAt: "desc",
+      },
+      include: {
+        Intrusion_Image: true,
+        Intrusion_Video: true,
+      },
+      where: { systemId: systemId },
+    });
+    if (intrusion.length >= 1) {
+      return intrusion[0];
+    }
+    return intrusion;
   } catch (error) {
     throw error;
   }
@@ -58,4 +79,5 @@ module.exports = {
   addIntrusionImages,
   addIntrusionVideo,
   getIntrusionImages,
+  getLatestIntrusion,
 };
