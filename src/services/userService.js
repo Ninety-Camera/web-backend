@@ -11,6 +11,7 @@ const { generateAccessToken } = require("../helpers/accessToken");
 const {
   mobileDeviceValidationSchema,
 } = require("../validationSchemas/mobileDeviceValidationSchema");
+const { sendEmail } = require("../helpers/mailService");
 
 async function resetPassword(data) {
   try {
@@ -35,6 +36,34 @@ async function resetPassword(data) {
       }
     });
   });
+}
+
+async function resetUserPassword(data) {
+  if (!data?.email) {
+    return createOutput(400, "Validation error");
+  }
+  const email = data.email;
+  try {
+    const user = await userRepository.getUser(email);
+    if (!user) {
+      return createOutput(404, "User not found");
+    }
+  } catch (error) {
+    return createOutput(500, "Error in finding the user");
+  }
+
+  try {
+    const data = {
+      toEmail: email,
+      subject: "Reset password of ninety camera account",
+      text: "Here is tthe link",
+    };
+
+    await sendEmail(data);
+    return createOutput(200, "Email sended succesfully");
+  } catch (error) {
+    return createOutput(500, "Errorr occured while sending the email");
+  }
 }
 
 async function logInUser(data) {
@@ -124,4 +153,5 @@ module.exports = {
   registerMobileDevice,
   resetPassword,
   resetPassword,
+  resetUserPassword,
 };

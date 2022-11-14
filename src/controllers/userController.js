@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateToken } = require("../helpers/accessToken");
+const { sendEmail } = require("../helpers/mailService");
 
 const router = express.Router();
 
@@ -8,6 +9,12 @@ const userService = require("../services/userService");
 router.get("/", authenticateToken, (req, res) => {
   res.status(200);
   res.send("Check");
+});
+
+router.post("/reset", async (req, res) => {
+  const result = userService.resetUserPassword(req.body);
+  res.status(200);
+  res.send(result);
 });
 
 router.post("/login", async (req, res) => {
