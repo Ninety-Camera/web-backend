@@ -8,8 +8,8 @@ const client = nodemailer.createTransport({
   },
 });
 
-function sendEmail(data) {
-  client.sendMail({
+async function sendEmail(data) {
+  await client.sendMail({
     from: "ninetycamera@gmail.com",
     to: data.toEmail,
     subject: data.subject,
