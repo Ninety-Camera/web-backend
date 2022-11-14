@@ -12,7 +12,7 @@ router.get("/", authenticateToken, (req, res) => {
 });
 
 router.post("/reset", async (req, res) => {
-  const result = userService.resetUserPassword(req.body);
+  const result = await userService.resetUserPassword(req.body);
   res.status(200);
   res.send(result);
 });
