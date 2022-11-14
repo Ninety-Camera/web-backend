@@ -59,7 +59,7 @@ async function resetUserPassword(data) {
       text: "Here is tthe link",
     };
 
-    await sendEmail(data);
+    sendEmail(data);
     return createOutput(200, "Email sended succesfully");
   } catch (error) {
     return createOutput(500, "Errorr occured while sending the email");
