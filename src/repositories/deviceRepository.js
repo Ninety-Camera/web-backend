@@ -13,4 +13,6 @@ async function getMobileDevices(systemId) {
   }
 }
 
+
+
 module.exports = { getMobileDevices };

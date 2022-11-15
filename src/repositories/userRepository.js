@@ -58,9 +58,21 @@ async function registerMobileDevice(data) {
   }
 }
 
+async function getMobileDevice(userId){
+  try {
+    const response = await prisma.mobile_Device.findUnique({
+      where:{ownerId:userId}
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   registerUser,
   getUser,
   registerMobileDevice,
   updateUserPassword,
+  getMobileDevice
 };
