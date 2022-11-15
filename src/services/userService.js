@@ -147,6 +147,19 @@ async function registerMobileDevice(data) {
   }
 }
 
+async function getMobileDevice(userId){
+  try {
+    const response = await userRepository.getMobileDevice(userId);
+    if(response){
+      return createOutput(400,"Already exists");
+    }else{
+      return createOutput(200,"Not exists");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   registerUser,
   logInUser,
@@ -154,4 +167,5 @@ module.exports = {
   resetPassword,
   resetPassword,
   resetUserPassword,
+  getMobileDevice
 };
