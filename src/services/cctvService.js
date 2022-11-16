@@ -32,6 +32,18 @@ async function addCCTVSystem(data) {
   }
 }
 
+async function updateCCTVSystem(data) {
+  try {
+    const response = await cctvRepository.updateCameraCount(
+      data.systemId,
+      data.cameraCount
+    );
+    return createOutput(201, "Changed succesfully!");
+  } catch (error) {
+    return createOutput(500, "Error in changing the count");
+  }
+}
+
 async function changeCCTVSettings(data) {
   try {
     const system = await cctvRepository.getCCTVSystem(data.systemId);
@@ -75,4 +87,5 @@ module.exports = {
   validateSystem,
   getSubscriberUsers,
   deleteSubscribedUser,
+  updateCCTVSystem,
 };
