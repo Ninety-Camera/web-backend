@@ -47,4 +47,27 @@ async function changeCCTVSettings(data) {
   }
 }
 
-module.exports = { addCCTVSystem, changeCCTVSettings, getCCTVSystem };
+async function getSubscribedUsers(systemId) {
+  try {
+    const result = await prisma.userSystem.findMany({
+      where: { systemId: systemId },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  addCCTVSystem,
+  changeCCTVSettings,
+  getCCTVSystem,
+  getSubscribedUsers,
+};
