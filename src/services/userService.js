@@ -143,6 +143,7 @@ async function registerMobileDevice(data) {
     const cctv = await cctvRepository.getCCTVSystem(data.systemId);
     return createOutput(201, { system: cctv });
   } catch (error) {
+    
     return createOutput(500, "Error in adding the mobile device");
   }
 }

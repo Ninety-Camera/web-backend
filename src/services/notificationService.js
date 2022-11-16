@@ -1,43 +1,42 @@
-const { Expo } = require("expo-server-sdk");
+var admin = require("firebase-admin");
 const createOutput = require("../helpers/createOutput");
 
-const deviceRepository = require("../repositories/deviceRepository");
+var serviceAccount = require("./firebase-conf.json");
 
-async function sendNotification(data) {
-  if (!data?.systemId) return createOutput(400, "Invalid data");
-  let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
-  const devices = await deviceRepository.getMobileDevices(data.systemId);
-  const deviceIds = devices.map((item) => item.id);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
-  deviceIds.forEach((element) => {
-    if (!Expo.isExpoPushToken(element)) {
-      return createOutput(400, "Invalid device id");
-    }
-  });
 
-  const messages = deviceIds.map((item) => {
-    return {
-      to: item,
-      sound: "default",
-      body: "Intrusion detected",
-      data: { withSome: "data" },
-    };
-  });
-
-  let chunks = expo.chunkPushNotifications(messages);
-
-  return new Promise(async (resolve, reject) => {
-    (async () => {
-      for (let chunk of chunks) {
-        try {
-          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          resolve(createOutput(200, "Notification sended succesfully!"));
-        } catch (error) {
-          resolve(400, "Error in sending the notification!");
-        }
+function sendNotifications(tokens){
+  const message = {
+    notification :{
+      title:"Intrusion Detected",
+      body:"An intrusion detected in your cctv system",
+      
+    },
+    tokens:tokens,
+  }
+  return new Promise((resolve,reject)=>{
+    admin.messaging().sendMulticast(message).then((response)=>{
+      console.log(response);
+            if (response.failureCount > 0) {
+        const failedTokens = [];
+        response.responses.forEach((resp, idx) => {
+          if (!resp.success) {
+            failedTokens.push(tokens[idx]);
+          }
+        });
+          resolve(createOutput(400,"Error occured while sending to some devices"));
+        
+      }else{
+        resolve(createOutput(200,"Notifications sended succesfully!"));
       }
-    })();
+    }).catch((e) =>{
+      reject(e);
+    });
   });
+  
 }
 
-module.exports = { sendNotification };
+module.exports = {sendNotifications}

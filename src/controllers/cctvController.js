@@ -2,6 +2,7 @@ const express = require("express");
 const { authenticateToken } = require("../helpers/accessToken");
 const cctvService = require("../services/cctvService");
 const cameraService = require("../services/cameraService");
+const notificationService = require("../services/notificationService");
 
 const router = express.Router();
 const sockets = require("../../sockets");
@@ -12,6 +13,12 @@ router.post("/add", authenticateToken, async (req, res) => {
   res.status(200);
   res.send(result);
 });
+
+router.post("/notification/test",authenticateToken,async (req,res) => {
+  const result = await notificationService.sendNotifications(req.body.tokens);
+  res.status(200);
+  res.send(result);
+})
 
 router.get("/validate/:systemId", authenticateToken, async (req, res) => {
   const result = await cctvService.validateSystem(req.params.systemId);
