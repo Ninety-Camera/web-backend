@@ -58,10 +58,21 @@ async function registerMobileDevice(data) {
   }
 }
 
-async function getMobileDevice(userId){
+async function getMobileDevice(userId) {
   try {
     const response = await prisma.mobile_Device.findUnique({
-      where:{ownerId:userId}
+      where: { ownerId: userId },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getUserSystem(userId) {
+  try {
+    const response = await prisma.cCTV_System.findUnique({
+      where: { ownerId: userId },
     });
     return response;
   } catch (error) {
@@ -74,5 +85,6 @@ module.exports = {
   getUser,
   registerMobileDevice,
   updateUserPassword,
-  getMobileDevice
+  getMobileDevice,
+  getUserSystem,
 };

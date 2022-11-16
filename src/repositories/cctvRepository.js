@@ -55,6 +55,7 @@ async function getSubscribedUsers(systemId) {
         user: {
           select: {
             email: true,
+            role: true,
           },
         },
       },
@@ -65,9 +66,32 @@ async function getSubscribedUsers(systemId) {
   }
 }
 
+async function deleteSubscribedUser(userId) {
+  try {
+    const userSystemDelete = prisma.userSystem.delete({
+      where: {
+        userId: userId,
+      },
+    });
+    const userDeviceDelete = prisma.mobile_Device.delete({
+      where: {
+        ownerId: userId,
+      },
+    });
+    const [result1, result2] = await prisma.$transaction([
+      userSystemDelete,
+      userDeviceDelete,
+    ]);
+    return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   addCCTVSystem,
   changeCCTVSettings,
   getCCTVSystem,
   getSubscribedUsers,
+  deleteSubscribedUser,
 };

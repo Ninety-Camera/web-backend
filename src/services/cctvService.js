@@ -46,12 +46,25 @@ async function changeCCTVSettings(data) {
   }
 }
 
-async function getSubscriberUsers(systemId){
+async function getSubscriberUsers(systemId) {
   try {
     const response = await cctvRepository.getSubscribedUsers(systemId);
-    return createOutput(200,{users:[...response]});
+    return createOutput(200, { users: [...response] });
   } catch (error) {
-    return createOutput(500,"Error in getting the subscribed users");
+    return createOutput(500, "Error in getting the subscribed users");
+  }
+}
+
+async function deleteSubscribedUser(userId) {
+  if (!userId) {
+    return createOutput(401, "Validation error");
+  }
+  try {
+    const response = await cctvRepository.deleteSubscribedUser(userId);
+    return createOutput(200, "User deleted succesfully!");
+  } catch (error) {
+    console.log("Error is :", error);
+    return createOutput(500, "Error in deleting the user");
   }
 }
 
@@ -60,5 +73,6 @@ module.exports = {
   changeCCTVSettings,
   getCCTVSystem,
   validateSystem,
-  getSubscriberUsers
+  getSubscriberUsers,
+  deleteSubscribedUser,
 };

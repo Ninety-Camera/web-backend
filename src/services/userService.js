@@ -143,21 +143,29 @@ async function registerMobileDevice(data) {
     const cctv = await cctvRepository.getCCTVSystem(data.systemId);
     return createOutput(201, { system: cctv });
   } catch (error) {
-    
     return createOutput(500, "Error in adding the mobile device");
   }
 }
 
-async function getMobileDevice(userId){
+async function getMobileDevice(userId) {
   try {
     const response = await userRepository.getMobileDevice(userId);
-    if(response){
-      return createOutput(400,"Already exists");
-    }else{
-      return createOutput(200,"Not exists");
+    if (response) {
+      return createOutput(400, "Already exists");
+    } else {
+      return createOutput(200, "Not exists");
     }
   } catch (error) {
     throw error;
+  }
+}
+
+async function getUserSystem(userId) {
+  try {
+    const response = await userRepository.getUserSystem(userId);
+    return createOutput(200, { system: response });
+  } catch (error) {
+    return createOutput(500, "Error in gettin the system");
   }
 }
 
@@ -168,5 +176,6 @@ module.exports = {
   resetPassword,
   resetPassword,
   resetUserPassword,
-  getMobileDevice
+  getMobileDevice,
+  getUserSystem,
 };
