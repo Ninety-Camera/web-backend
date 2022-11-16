@@ -35,6 +35,22 @@ async function addCCTVSystem(data) {
   }
 }
 
+async function updateCameraCount(systemId, count) {
+  try {
+    const response = await prisma.cCTV_System.update({
+      where: {
+        id: systemId,
+      },
+      data: {
+        cameraCount: count,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function changeCCTVSettings(data) {
   try {
     const result = await prisma.cCTV_System.update({
@@ -94,4 +110,5 @@ module.exports = {
   getCCTVSystem,
   getSubscribedUsers,
   deleteSubscribedUser,
+  updateCameraCount,
 };

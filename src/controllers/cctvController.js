@@ -38,6 +38,12 @@ router.delete("/subscribed/user", authenticateToken, async (req, res) => {
   res.send(result);
 });
 
+router.put("/update/camera", authenticateToken, async (req, res) => {
+  const result = await cctvService.updateCCTVSystem(req.body);
+  res.status(200);
+  res.send(result);
+});
+
 router.put("/settings/change", authenticateToken, async (req, res) => {
   const data = { userId: req.user.id, ...req.body };
   const result = await cctvService.changeCCTVSettings(data);
