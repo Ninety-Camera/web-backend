@@ -14,11 +14,11 @@ router.post("/add", authenticateToken, async (req, res) => {
   res.send(result);
 });
 
-router.post("/notification/test",authenticateToken,async (req,res) => {
+router.post("/notification/test", authenticateToken, async (req, res) => {
   const result = await notificationService.sendNotifications(req.body.tokens);
   res.status(200);
   res.send(result);
-})
+});
 
 router.get("/validate/:systemId", authenticateToken, async (req, res) => {
   const result = await cctvService.validateSystem(req.params.systemId);
@@ -26,10 +26,16 @@ router.get("/validate/:systemId", authenticateToken, async (req, res) => {
   res.send(result);
 });
 
-router.get("/subscribed/:systemId", authenticateToken, async (req,res) => {
+router.get("/subscribed/:systemId", authenticateToken, async (req, res) => {
   const result = await cctvService.getSubscriberUsers(req.params.systemId);
   res.status(200);
-  res.send(result)
+  res.send(result);
+});
+
+router.delete("/subscribed/user", authenticateToken, async (req, res) => {
+  const result = await cctvService.deleteSubscribedUser(req.body?.userId);
+  res.status(200);
+  res.send(result);
 });
 
 router.put("/settings/change", authenticateToken, async (req, res) => {
