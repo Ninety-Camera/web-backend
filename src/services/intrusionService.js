@@ -1,6 +1,7 @@
 const createOutput = require("../helpers/createOutput");
 const intrusionRepository = require("../repositories/intrusionRepository");
 const notificationService = require("./notificationService");
+const deviceRepository = require("../repositories/deviceRepository");
 const {
   intrusionValidationSchema,
   intrusionImageValidationSchema,
@@ -15,9 +16,10 @@ async function addIntrusion(data) {
   }
   try {
     const response = await intrusionRepository.addIntrusion(data);
-    const notificationResult = await notificationService.sendNotification({
-      systemId: data.systemId,
-    });
+    const deviceResult = await deviceRepository.getMobileDevices(data.systemId);
+    const devices = deviceResult.map((item) => item.id);
+    const notificationResult = await notificationService.sendNotifications(devices);
+
     return createOutput(201, {
       intrusion: response,
       notification: notificationResult,
