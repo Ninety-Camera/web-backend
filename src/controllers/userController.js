@@ -11,6 +11,18 @@ router.get("/", authenticateToken, (req, res) => {
   res.send("Check");
 });
 
+router.get("/mobile/check/:userId", authenticateToken, async (req, res) => {
+  const result = await userService.getMobileDevice(req.params.userId);
+  res.status(200);
+  res.send(result);
+});
+
+router.get("/system/:userId", authenticateToken, async (req, res) => {
+  const result = await userService.getUserSystem(req.params.userId);
+  res.status(200);
+  res.send(result);
+});
+
 router.post("/reset", async (req, res) => {
   const result = await userService.resetUserPassword(req.body);
   res.status(200);
@@ -25,12 +37,6 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   const result = await userService.registerUser(req.body);
-  res.status(200);
-  res.send(result);
-});
-
-router.get("/mobile/check/:userId",authenticateToken, async (req,res)=>{
-  const result = await userService.getMobileDevice(req.params.userId);
   res.status(200);
   res.send(result);
 });
