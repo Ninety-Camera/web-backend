@@ -46,9 +46,19 @@ async function changeCCTVSettings(data) {
   }
 }
 
+async function getSubscriberUsers(systemId){
+  try {
+    const response = await cctvRepository.getSubscribedUsers(systemId);
+    return createOutput(200,{users:[...response]});
+  } catch (error) {
+    return createOutput(500,"Error in getting the subscribed users");
+  }
+}
+
 module.exports = {
   addCCTVSystem,
   changeCCTVSettings,
   getCCTVSystem,
   validateSystem,
+  getSubscriberUsers
 };
