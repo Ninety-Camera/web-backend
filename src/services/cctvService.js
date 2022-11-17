@@ -80,6 +80,17 @@ async function deleteSubscribedUser(userId) {
   }
 }
 
+async function updateCameraCount(systemId, factor) {
+  try {
+    const response = await cctvRepository.updateCameraCount(systemId, 1);
+    console.log("Repsinse is: ", response);
+    return createOutput(201, "Camera count updated");
+  } catch (error) {
+    console.log("Error is: ", error);
+    return createOutput(500, "Error in updating the system");
+  }
+}
+
 module.exports = {
   addCCTVSystem,
   changeCCTVSettings,
@@ -88,4 +99,5 @@ module.exports = {
   getSubscriberUsers,
   deleteSubscribedUser,
   updateCCTVSystem,
+  updateCameraCount,
 };

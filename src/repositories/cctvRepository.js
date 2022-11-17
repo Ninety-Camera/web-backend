@@ -35,14 +35,23 @@ async function addCCTVSystem(data) {
   }
 }
 
-async function updateCameraCount(systemId, count) {
+async function updateCameraCount(systemId, factor) {
   try {
+    const cameraCount = await prisma.cCTV_System.findUnique({
+      where: {
+        id: systemId,
+      },
+      select: {
+        cameraCount: true,
+      },
+    });
+
     const response = await prisma.cCTV_System.update({
       where: {
         id: systemId,
       },
       data: {
-        cameraCount: count,
+        cameraCount: cameraCount.cameraCount + factor,
       },
     });
     return response;
