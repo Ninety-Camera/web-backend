@@ -1,11 +1,18 @@
 const express = require("express");
 const { authenticateToken } = require("../helpers/accessToken");
 const cameraService = require("../services/cameraService");
+const cctvService = require("../services/cctvService");
 const sockets = require("../../sockets");
 const router = express.Router();
 
 router.post("/add", authenticateToken, async (req, res) => {
   const result = await cameraService.addCamera(req.body);
+  if (result.status === 201) {
+    const systemCamUpdate = await cctvService.updateCameraCount(
+      req.body.systemId,
+      1
+    );
+  }
   res.status(200);
   res.send(result);
 });

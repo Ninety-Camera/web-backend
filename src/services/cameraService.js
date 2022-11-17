@@ -14,6 +14,7 @@ async function addCamera(data) {
 
   try {
     const response = await cctvRepository.addCamera(data);
+
     return createOutput(201, { camera: response });
   } catch (error) {
     console.log(error);
