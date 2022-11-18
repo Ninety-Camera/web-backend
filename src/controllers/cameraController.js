@@ -38,6 +38,12 @@ router.put("/update", authenticateToken, async (req, res) => {
 
 router.delete("/:id", authenticateToken, async (req, res) => {
   const result = await cameraService.deleteCamera(req.params.id);
+  if (result.status === 201) {
+    const systemCamUpdate = await cctvService.updateCameraCount(
+      req.body.systemId,
+      -1
+    );
+  }
   res.status(200);
   res.send(result);
 });
