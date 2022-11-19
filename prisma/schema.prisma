@@ -23,6 +23,7 @@ model User {
   Mobile_Device Mobile_Device?
   UserSystem    UserSystem?
   CCTV_System   CCTV_System?
+  ForgotCodes   Forgot_Code?
 }
 
 model UserSystem {
@@ -52,6 +53,13 @@ model Camera_Details {
   name        String
   type        CAMERA_TYPE
   status      CAMERA_STATUS
+}
+
+model Forgot_Code {
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  createdAt DateTime @default(now())
 }
 
 enum CAMERA_STATUS {
