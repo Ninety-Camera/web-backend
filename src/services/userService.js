@@ -209,6 +209,24 @@ async function getUserSystem(userId) {
   }
 }
 
+async function getTotalUserCount() {
+  try {
+    const response = await userRepository.getDesktopUserCount();
+    return createOutput(200, response);
+  } catch (error) {
+    return createOutput(500, "Error in getting the user count");
+  }
+}
+
+async function getTotalMobileUserCount() {
+  try {
+    const response = await userRepository.getMobileUserCount();
+    return createOutput(200, response);
+  } catch (error) {
+    return createOutput(500, "Error in getting the user count");
+  }
+}
+
 module.exports = {
   registerUser,
   logInUser,
@@ -219,4 +237,6 @@ module.exports = {
   getMobileDevice,
   getUserSystem,
   changePassword,
+  getTotalUserCount,
+  getTotalMobileUserCount,
 };

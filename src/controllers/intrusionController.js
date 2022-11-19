@@ -4,10 +4,15 @@ const { authenticateToken } = require("../helpers/accessToken");
 const router = express.Router();
 
 const intrusionService = require("../services/intrusionService");
-const notificationService = require("../services/notificationService");
 
 router.get("/get/:systemId", authenticateToken, async (req, res) => {
   const response = await intrusionService.getIntrusions(req.params.systemId);
+  res.status(200);
+  res.send(response);
+});
+
+router.get("/all/count", authenticateToken, async (req, res) => {
+  const response = await intrusionService.getTotalIntrusions();
   res.status(200);
   res.send(response);
 });

@@ -73,6 +73,15 @@ async function getIntrusionImages(intrusionId) {
   }
 }
 
+async function getTotalIntrusions() {
+  try {
+    const response = await prisma.intrusion.count();
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
 module.exports = {
   addIntrusion,
   getIntrusions,
@@ -80,4 +89,5 @@ module.exports = {
   addIntrusionVideo,
   getIntrusionImages,
   getLatestIntrusion,
+  getTotalIntrusions,
 };

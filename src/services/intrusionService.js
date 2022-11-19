@@ -18,7 +18,9 @@ async function addIntrusion(data) {
     const response = await intrusionRepository.addIntrusion(data);
     const deviceResult = await deviceRepository.getMobileDevices(data.systemId);
     const devices = deviceResult.map((item) => item.id);
-    const notificationResult = await notificationService.sendNotifications(devices);
+    const notificationResult = await notificationService.sendNotifications(
+      devices
+    );
 
     return createOutput(201, {
       intrusion: response,
@@ -89,6 +91,15 @@ async function getLatestIntrusion(systemId) {
   }
 }
 
+async function getTotalIntrusions() {
+  try {
+    const response = await intrusionRepository.getTotalIntrusions();
+    return createOutput(200, response);
+  } catch (error) {
+    return createOutput(500, "Error occured in getting the intrusions");
+  }
+}
+
 module.exports = {
   addIntrusion,
   getIntrusions,
@@ -96,4 +107,5 @@ module.exports = {
   addIntrusionVideo,
   getIntrusionImages,
   getLatestIntrusion,
+  getTotalIntrusions,
 };

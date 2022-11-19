@@ -148,6 +148,32 @@ async function deletePreviousOTP(userId) {
   }
 }
 
+async function getDesktopUserCount() {
+  try {
+    const response = await prisma.user.count({
+      where: {
+        role: "ADMIN",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getMobileUserCount() {
+  try {
+    const response = await prisma.user.count({
+      where: {
+        role: "USER",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   registerUser,
   getUser,
@@ -160,4 +186,6 @@ module.exports = {
   deleteToken,
   deletePreviousOTP,
   getUserById,
+  getDesktopUserCount,
+  getMobileUserCount,
 };
