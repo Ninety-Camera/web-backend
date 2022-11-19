@@ -227,6 +227,15 @@ async function getTotalMobileUserCount() {
   }
 }
 
+async function getAllUsersWithDetails() {
+  try {
+    const response = await userRepository.getAllUsersWithDetails();
+    return createOutput(200, response);
+  } catch (error) {
+    return createOutput(500, "Error in getting all the users");
+  }
+}
+
 module.exports = {
   registerUser,
   logInUser,
@@ -239,4 +248,5 @@ module.exports = {
   changePassword,
   getTotalUserCount,
   getTotalMobileUserCount,
+  getAllUsersWithDetails,
 };

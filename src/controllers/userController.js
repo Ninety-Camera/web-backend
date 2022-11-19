@@ -17,6 +17,12 @@ router.get("/alluser/desktop", authenticateToken, async (req, res) => {
   res.send(response);
 });
 
+router.get("/alluser/details", authenticateToken, async (req, res) => {
+  const response = await userService.getAllUsersWithDetails();
+  res.status(200);
+  res.send(response);
+});
+
 router.get("/alluser/mobile", authenticateToken, async (req, res) => {
   const response = await userService.getTotalMobileUserCount();
   res.status(200);
