@@ -11,7 +11,10 @@ const { generateAccessToken } = require("../helpers/accessToken");
 const {
   mobileDeviceValidationSchema,
 } = require("../validationSchemas/mobileDeviceValidationSchema");
-const { sendEmail } = require("../helpers/mailService");
+const {
+  sendEmail,
+  sendPasswordChangedMail,
+} = require("../helpers/mailService");
 
 async function resetPassword(data) {
   try {
@@ -26,9 +29,14 @@ async function resetPassword(data) {
         resolve(createOutput(400, "Server error"));
       }
       try {
-        const user = await userRepository.updateUserPassword({
+        await userRepository.updateUserPassword({
           userId: data.userId,
           password: hash,
+        });
+        const user = await userRepository.getUserById(data.userId);
+        sendPasswordChangedMail({
+          email: user.email,
+          firstName: user.firstName,
         });
         resolve(createOutput(201, "Password changed succesfully"));
       } catch (error) {
@@ -42,27 +50,60 @@ async function resetUserPassword(data) {
   if (!data?.email) {
     return createOutput(400, "Validation error");
   }
+
+  const number = Math.floor(100000 + Math.random() * 900000);
+
   const email = data.email;
   try {
     const user = await userRepository.getUser(email);
     if (!user) {
       return createOutput(404, "User not found");
     }
-  } catch (error) {
-    return createOutput(500, "Error in finding the user");
-  }
-
-  try {
+    await userRepository.deletePreviousOTP(user.id);
     const data = {
       toEmail: email,
       subject: "Reset password of ninety camera account",
-      text: "Here is tthe link",
+      text: number,
     };
 
     sendEmail(data);
-    return createOutput(200, "Email sended succesfully");
+    await userRepository.addForgotPasswordOTP(user?.id, number.toString());
+    var modiUser = user;
+    delete modiUser["password"];
+    return createOutput(200, { user: { ...user } });
   } catch (error) {
-    return createOutput(500, "Errorr occured while sending the email");
+    return createOutput(500, "Error in finding the user");
+  }
+}
+
+async function changePassword(data) {
+  try {
+    const forgotOTP = await userRepository.getForgotToken(data.userId);
+
+    if (!forgotOTP) {
+      return createOutput(404, "Not found");
+    }
+    const today = new Date();
+    const createdDate = Date.parse(forgotOTP.createdAt);
+    const diff = today - createdDate;
+    const diffMinutes = Math.round(((diff % 86400000) % 3600000) / 60000);
+    if (diffMinutes > 5) {
+      await userRepository.deleteToken(data.userId);
+      return createOutput(401, "OTP not valid");
+    }
+
+    if (forgotOTP.token.toString() !== data.token.toString()) {
+      return createOutput(401, "Invalid OTP");
+    }
+    await resetPassword({
+      userId: data.userId,
+      password: data.password,
+    });
+    await userRepository.deleteToken(data.userId);
+    return createOutput(200, "Password changed succesfully");
+  } catch (error) {
+    console.log("Error: ", error);
+    return createOutput(500, "Error in updating the password");
   }
 }
 
@@ -97,7 +138,6 @@ async function logInUser(data) {
       });
     });
   } catch (error) {
-    console.log("Error occured: ", error);
     return createOutput(400, "Error in getting the user");
   }
 }
@@ -178,4 +218,5 @@ module.exports = {
   resetUserPassword,
   getMobileDevice,
   getUserSystem,
+  changePassword,
 };
