@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { transformDocument } = require("@prisma/client/runtime");
 
 const prisma = new PrismaClient();
 
@@ -174,6 +175,22 @@ async function getMobileUserCount() {
   }
 }
 
+async function getAllUsersWithDetails() {
+  try {
+    const response = await prisma.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   registerUser,
   getUser,
@@ -188,4 +205,5 @@ module.exports = {
   getUserById,
   getDesktopUserCount,
   getMobileUserCount,
+  getAllUsersWithDetails,
 };
