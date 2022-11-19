@@ -11,6 +11,18 @@ router.get("/", authenticateToken, (req, res) => {
   res.send("Check");
 });
 
+router.get("/alluser/desktop", authenticateToken, async (req, res) => {
+  const response = await userService.getTotalUserCount();
+  res.status(200);
+  res.send(response);
+});
+
+router.get("/alluser/mobile", authenticateToken, async (req, res) => {
+  const response = await userService.getTotalMobileUserCount();
+  res.status(200);
+  res.send(response);
+});
+
 router.get("/mobile/check/:userId", authenticateToken, async (req, res) => {
   const result = await userService.getMobileDevice(req.params.userId);
   res.status(200);
