@@ -25,6 +25,13 @@ You need to place above environmental variables on a .env files to run the appli
 
 And firebase config file is required to send the notifications to the mobile apps. Change the firebase-conf.json at src/services/. You can take this configuration file from firebase by creating a project.
 
+## Provided endpoints and functionalities
+ - User CRUD operations
+ - System CRUD operations
+ - Camera CRUD operations
+ - Notification services
+ - Email sending services
+
 ## Technologies used
  - Express.js
  - Prisma
